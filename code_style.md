@@ -26,7 +26,7 @@ First, some quick terminology.
 
 ###About performance
 
-Some of these guidelines may seem counter-perfomance (that is, these conventions may appear to hurt performance), but in fact, they are in place to *help* performance: Developer performance. Most runtime performance hits as a result to this guide will be negligeable, but the gains to the developers will be substantial.
+Some of these guidelines may seem counter-perfomance (that is, these conventions may appear to hurt performance), but in fact, they are in place to *help* performance: Developer performance. Most runtime performance hits as a result to this guide will be negligible, but the gains to the developers will be substantial.
 
 If any of the guidelines causes a substantial performance hit, it can be dealt with on a case basis, and only after it has been thoroughly profiled.
 
