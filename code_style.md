@@ -33,12 +33,16 @@ If any of the guidelines causes a substantial performance hit, it can be dealt w
 
 When giving a name to any kind of symbol, you should strive to make it descriptive over terse. We have text editors capable of auto-completing symbol names, and we expect to make great usage of this. This extends even to iterator variables: those should be named accordingly (even if it is just `index`, but especially in the case of nested loops, `i`, `j`, and `k` will have your head spinning in no time).
 
-    NSInteger currentColumn;
+``` objc
+NSInteger currentColumn;
+```
 
 The Cocoa naming conventions call for camel-casing all symbol names (with preprocessor bits being the only exclusion):
 
-    #define X_OFFSET 25.0f
-    NSInteger index = [SomeClassName classMethod];
+``` objc
+#define X_OFFSET 25.0f
+NSInteger index = [SomeClassName classMethod];
+```
 
 Do not abbreviate symbols and do not use acronyms unless they are extremely common (in which case you use uppercase for each letter of the acronym) like `URL` or `PNG`. See the [Coding Guidelines for Cocoa - Acceptable Abbreviations and Acronyms][apple2] for a list of acceptable abbreviations and acronyms.
 
@@ -86,7 +90,9 @@ When naming the category, avoid using generic names like "Additions", instead be
 
 Categories are used to extend existing classes at runtime without subclassing, and we can make liberal use of these. But categories **must not** be used to override existing methods. Therefore, **all** methods of the category must be appropriately prefixed. Use the project prefix followed by `_` as the method prefix.
 
-    - (void)JPX_doSomething;
+``` objc
+- (void)JPX_doSomething;
+```
 
 ### Variables
 
@@ -96,8 +102,10 @@ When declaring object or any other pointer type variables, the star `*` belongs 
 
 Keep each variable declaration on its own line, even if subsequent declarations are of the same type.
 
-    NSString *username;
-    NSString *password;
+``` objc
+NSString *username;
+NSString *password;
+```
 
 #### Instance Variables
 
@@ -109,12 +117,16 @@ Do not declare them in the public `@interface` of a class, as instance variables
 
 Private constants should be declared with the `static` and `const` keywords and should start with the project prefix. They should **only** be declared in implementation files. `static` ensures that the symbol is only visible inside the implemention file. `const` ensures that no code in the implementation file changes the value of the symbol.
 
-    static NSString *const JPXAnimationDurationKey = @"JPXAnimationDurationKey";
+``` objc
+static NSString *const JPXAnimationDurationKey = @"JPXAnimationDurationKey";
+```
     
 Public constants should be declared in the header and should be initialized in the implementation file. The actual value of a public constant is an implementation detail. Because of this split, the declaration must use `extern` to indicate that the symbol in the header is initialized somewhere else. The name of a public constant begins with the name of the class in which the constant is declared (in the example below `JPXProduct`), followed by a descriptive name.
 
-    extern NSString *const JPXProductDataKey;                   // In file JPXProduct.h
-    NSString *const JPXProductDataKey = @"JPXProductDataKey";   // In file JPXProduct.m
+``` objc
+extern NSString *const JPXProductDataKey;                   // In file JPXProduct.h
+NSString *const JPXProductDataKey = @"JPXProductDataKey";   // In file JPXProduct.m
+```
 
 Both private and public constants should be initialized with their symbol name. This effectively prevents conflicts with other constants.
 
@@ -122,18 +134,22 @@ Both private and public constants should be initialized with their symbol name. 
 
 Enumerations should be used whenever a variety of integer values could be used (usually as some kind of discriminate grouping). Enumerations should be typedef'd with the `NS_ENUM()` preprocessor macro and given a name in a similar style to their related class. The enum values should be named similarly, including the name of the type, with the actual type appended.
 
-    typedef NS_ENUM(NSInteger, JPXProductPlacementType) {
-        JPXProductPlacementTypeTop,
-        JPXProductPlacementTypeCenter,
-        JPXProductPlacementTypeBottom
-    };
+``` objc
+typedef NS_ENUM(NSInteger, JPXProductPlacementType) {
+    JPXProductPlacementTypeTop,
+    JPXProductPlacementTypeCenter,
+    JPXProductPlacementTypeBottom
+};
+```
 
 Even though enumeration types are just integers, they should always be treated as their own type (e.g. `JPXProductPlacementType`, and never just `int`). This gives the symbol extra context instead of just some random, unrelated type. The use of `NS_ENUM()` allows the compiler to provide code-completion for enumerations and to emit more warnings if the enumeration is used inappropriately. For more information about `NS_ENUM()`, see [NSHipster - NS_ENUM & NS_OPTIONS][nshipster1]. 
 
 You should never use a plain integer when an enumeration value is expected.
 
-    cell.placementType = 1;                                // Bad
-    cell.placementType = JPXProductPlacementTypeCenter;    // Good
+``` objc
+cell.placementType = 1;                                // Bad
+cell.placementType = JPXProductPlacementTypeCenter;    // Good
+```
 
 If the number the enumeration value resolves to ever changes, you get the new value for free!
 
@@ -141,7 +157,9 @@ If the number the enumeration value resolves to ever changes, you get the new va
 
 `#define` should only be used for small, internal uses where one of the above symbol types seems like overkill. `#define` is the poor-man's constant. Defines should be all uppercase, with underscores used as a delimiter. 
 
-    #define CELL_X_OFFSET 25.0f
+``` objc
+#define CELL_X_OFFSET 25.0f
+```
 
 ### Methods
 
@@ -151,16 +169,22 @@ Make method names as long as necessary, naming with hints towards the condition,
 
 The single parts of the selector (i.e., the words between the colons) should be named without the use of `and`, `with`, etc. These conjunctions are not necessary and become excessive after only a few instances. Exceptions can be made for the first part of the selector.
 
-    - (id)initWithFrame:(CGRect)frame;                                         // Good
-    - (id)initWithFrame:(CGRect)frame backgroundColor:(UIColor *)color;        // Good
-    - (id)initWithFrame:(CGRect)frame andBackgroundColor:(UIColor *)color;     // Bad
+``` objc
+- (id)initWithFrame:(CGRect)frame;                                         // Good
+- (id)initWithFrame:(CGRect)frame backgroundColor:(UIColor *)color;        // Good
+- (id)initWithFrame:(CGRect)frame andBackgroundColor:(UIColor *)color;     // Bad
+```
 
 When creating new methods which provide more options to existing methods, list all the original parameters in your new method *first*, before adding additional parameters (as in `-initWithFrame:backgroundColor:` above). The only exception to this rule is when the final parameter of the existing method accepts a Block. In this case, the new method must keep the Block paramter as the final parameter.
 
-    - (void)haveAPartyWithFriends:(NSArray *)friends cleanUpHandler:(JPXCleanUpHandler)cleanUpHandler;
-    - (void)haveAPartyWithFriends:(NSArray *)friends 
-                cateringAvailable:(BOOL)cateringAvailable 
-                   cleanUpHandler:(JPXCleanUpHandler)cleanUpHandler;
+``` objc
+- (void)haveAPartyWithFriends:(NSArray *)friends 
+               cleanUpHandler:(JPXCleanUpHandler)cleanUpHandler;
+               
+- (void)haveAPartyWithFriends:(NSArray *)friends 
+            cateringAvailable:(BOOL)cateringAvailable 
+               cleanUpHandler:(JPXCleanUpHandler)cleanUpHandler;
+```
 
 Selector signatures (both interface and implementation) must follow the standard usage of whitespace as demonstrated throughout this guide.
 
@@ -171,13 +195,15 @@ Selector signatures (both interface and implementation) must follow the standard
 5. After the last parameter in the declaration, there should be a semicolon in the declaration.
 6. After the last parameter in the implementation, there should be a space and then an opening brace **on the same line**.
 
-    // Declaration in header
-    - (NSString *)stringByMashingFirstName:(NSString *)firstName lastName:(NSString *)lastName;
-    
-    // Implementation in implementation file
-    - (NSString *)stringByMashingFirstName:(NSString *)firstName lastName:(NSString *)lastName {
-        // Do something ...
-    }
+``` objc
+// Declaration in header
+- (NSString *)stringByMashingFirstName:(NSString *)firstName lastName:(NSString *)lastName;
+
+// Implementation in implementation file
+- (NSString *)stringByMashingFirstName:(NSString *)firstName lastName:(NSString *)lastName {
+    // Do something ...
+}
+```
 
 Each method declaration should appear on its own line, below declared `@property` entries. Group related methods together and add a single line of whitespace between groups.
 
@@ -189,15 +215,19 @@ Finally, do not be abusive with the compiler:
 * All parameters must be named, even though this is not required by the compiler.
 * All parameters must be typed, even though this is not required by the compiler.
 
-    - validButStupidlyNamedSelector:::;    // Bad
+``` objc
+- validButStupidlyNamedSelector:::;    // Bad
+```
 
 #### Functions
 
 Always name all arguments even in the header declaration. This assists with code completion and makes it easier for the developer to know which parameters do what. Also, use the project prefix in the function name to prevent conflicting symbol names.
 
-    void JPXPrint(NSString *);            // Bad
-    void JPXPrint(NSString *name);        // Mediocre
-    void JPXPrintName(NSString *name);    // Good
+``` objc
+void JPXPrint(NSString *);            // Bad
+void JPXPrint(NSString *name);        // Mediocre
+void JPXPrintName(NSString *name);    // Good
+```
 
 ## Whitespace
 
@@ -215,16 +245,20 @@ If you need to wrap a method line, either the signature or an invocation, you ma
 
 Control structures like `if`, `for`, `while`, etc., all require one space between the keyword and the open parenthesis, and one space between the closing parenthesis and the opening brace. There should be no padding whitespace inside the parentheses before the actual condition.
 
-    if (condition) {
-        // Handle the condition
-    }
+``` objc
+if (condition) {
+    // Handle the condition
+}
+```
 
 Assignments inside conditionals should be avoided, but in the case of `-init`, should be wrapped in double parentheses, as recommended by the Clang Fixit system.
 
 Always try to use control structures without braces, as this leads to easier to understand code. If the handling of the condition requires more than a single line of code, it should be performed in a dedicated method.
 
-    if (condition) 
-        [self handleCondition];
+``` objc
+if (condition) 
+    [self handleCondition];
+```
 
 ## Project Conventions
 
@@ -238,9 +272,11 @@ This also means header files should not contain instance variable declarations, 
 
 2. Declaring instance variables in the `@implementation`. This is just like declaring them in the `@interface`, except they are no longer visible to client classes or subclasses.
 
-    @implementation JPXMyClass {
-        NSString *_myInstanceVariable;
-    }
+``` objc
+@implementation JPXMyClass {
+    NSString *_myInstanceVariable;
+}
+```
 
 Of the two methods, using properties (even if just declared in the class extension) is better because it generates getters and setters, which gives us a common place to add extra code. If you access ivars directly and change must be made, then you potentially have to adjust many different call sites.
 
@@ -254,11 +290,13 @@ For subclasses, try to keep your overrides grouped as well, in order of the hier
 
 Class extensions are how private properties should be hidden out of the public interface. They are kind of like anonymous categories. They should be placed in the `.m` file before the main `@implementation` block. For a class named `JPXShopTableViewController`, the class extension might look like this:
 
-    @interface JPXShopTableViewController ()
+``` objc
+@interface JPXShopTableViewController ()
     
-    @property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSString *name;
 
-    @end
+@end
+```
 
 The properties declared in the class extension are synthesized like any other property in the public interface. There is no need to create a second, named category.
 
