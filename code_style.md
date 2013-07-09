@@ -46,7 +46,7 @@ Do not abbreviate symbols and do not use acronyms unless they are extremely comm
 
 Files should be given descriptive, camel-cased names, with the initial letter being uppercased. When creating classes in Xcode, this is the default behavior, as the file names match the class names they contain.
 
-Files should be prefixed with the project prefix which should be the initials of the organization (in our case, this is `JPX` for Jaded Pixel). The prefix should contain at least three letters, because two-letter prefixes are reserved for Apple framework classes (see [Programming with Objective-C - Class Names Must Be Unique Across an Entire App] [apple3] for more information). 
+Files should be prefixed with the project prefix which should be the initials of the organization (in our case, this is `JPX` for Jaded Pixel). The prefix should contain at least three letters, because two-letter prefixes are reserved for Apple framework classes. See [Programming with Objective-C - Class Names Must Be Unique Across an Entire App] [apple3] for more information. 
 
 	JPXClassName.h
 	JPXClassName.m
@@ -55,24 +55,27 @@ Files should be prefixed with the project prefix which should be the initials of
 
 ### Classes
 
-Class names must be indicative of their class heirarchy. That is, from the class name, you should be able to correctly guess exactly what "kind of" class it is. Don't rely on the Xcode folder/group structure to indicate this, as the text editor itself ignores in which folder the class appears.
+Class names must be indicative of their class hierarchy. That is, from the class name, you should be able to correctly guess exactly what kind of class it is. Do not rely on the folder/group structure in Xcode to indicate this, as the text editor itself ignores in which folder the class appears.
 
 	JPXProductsTableViewController
 
-The above name is descriptive, and immediately indicates to the developer this class is a TableViewController which displays products.
+The name above is descriptive and immediately indicates to the developer that this class displays products and is a subclass of `UITableViewController`.
 
-Controller classes should contain `Controller` in the name, View classes should contain `View` in the name (e.g. `JPProductsTableViewCell`), and Model classes should generally contain neither, but still indicate what they are (avoid the use of `Model` in the name as it is redundant).
+Controller classes should contain `Controller` at the end of their name, view classes should contain `View` at the end of their name (e.g. `JPXProductsTableViewCell`), and model classes should generally contain neither, but still indicate what they are (avoid the use of `Model` in the name as it is redundant).
 
-**Note**: A class should **never** be named with the same prefix as an Apple provided class.
+**Note**: A class should **never** be named with the same prefix as an Apple provided class. This is implicitly guaranteed if you use a three-letter prefix (as suggested above).
 
-###Protocols
+### Protocols
 
 Protocols should be named like the classes they pertain to, additionally appending the protocol role. If there is no distinct role, appending `Protocol` is sufficient. The goal is to be able to tell at a glance what the symbol represents.
 
-	JPCollectionViewDelegate
-	JPReaperProtocol
+	JPXCollectionViewDelegate
+        JPXCollectionViewDataSource
+	JPXReaperProtocol
 
-###Categories
+Methods in a protocol are implicitly `@required`. It is often desirable to have `@optional` methods as well (e.g., when there is a default value for data source method). `@required` methods should be grouped together at the top, `@optional` methods should be grouped together at the bottom.
+
+### Categories
 
 Category file names should indicate the name of the class being extended, followed by a `+`, followed by the name of the category. I believe this is the default Xcode behaviour as of Xcode 4.2.
 
