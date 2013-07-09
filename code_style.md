@@ -213,25 +213,18 @@ If you need to wrap a method line, either the signature or an invocation, you ma
 
 ### Control Structures
 
-Control structures like `if`, `for`, `while`, etc all require one space between the keyword and the open paren, and one space between the closing paren and the opening brace. There should be no padding spaces inside the parens before the actual condition.
+Control structures like `if`, `for`, `while`, etc., all require one space between the keyword and the open parenthesis, and one space between the closing parenthesis and the opening brace. There should be no padding whitespace inside the parentheses before the actual condition.
 
-	if (someCondition == otherThing) {
-		NSLog(@"Great success!", nil);
-	}
+    if (condition) {
+        // Handle the condition
+    }
 
 Assignments inside conditionals should be avoided, but in the case of `-init`, should be wrapped in double parentheses, as recommended by the Clang Fixit system.
 
-Using control structures without braces should be avoided, as this can lead to hard to detect errors if additional lines are later added. If you decide to go without braces, prefer to keep your code all on one line:
+Always try to use control structures without braces, as this leads to easier to understand code. If the handling of the condition requires more than a single line of code, it should be performed in a dedicated method.
 
-	if (!condition) return; // bailing early.
-
-####Comparing against `nil` and buddies 
-
-When comparing a variable for equality against `nil` or some constant, put the constant value first. This avoids accidentally forgetting the second `=` sign and therefore avoids an accidental assignment inside the conditional. Though the Clang compiler will warn against such occurrences, it's just better practice to avoid the mistakes altogether.
-
-	if (hopefullyExistingObject = nil) { ... // oops! bad.
-	if (nil == hopefullyExistingObject) { ... // much better. No chance for bugs here.
-
+    if (condition) 
+        [self handleCondition];
 
 Project Conventions
 -----------------
