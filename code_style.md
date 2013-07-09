@@ -181,6 +181,8 @@ Selector signatures (both interface and implementation) must follow the standard
 
 Each method declaration should appear on its own line, below declared `@property` entries. Group related methods together and add a single line of whitespace between groups.
 
+It is not necessary to declare a private method before it can be invoked from other methods. A method might also be implemented later in the class, below the call site. You should always place the method implementation where it belongs.
+
 Finally, do not be abusive with the compiler:
 
 * A return type must be provided, even though this is not required by the compiler.
@@ -189,19 +191,21 @@ Finally, do not be abusive with the compiler:
 
     - validButStupidlyNamedSelector:::;    // Bad
 
-####Functions
+#### Functions
 
-Always name all arguments even in the header declaration. This assists with code completion and makes it easier for the developer to know which parameters do what.
+Always name all arguments even in the header declaration. This assists with code completion and makes it easier for the developer to know which parameters do what. Also, use the project prefix in the function name to prevent conflicting symbol names.
 
-	void someFunction(NSString *); // compiles, but so dirty
-	void someBetterFunction(NSString *name); // delightful and satisfying.
+    void JPXPrint(NSString *);            // Bad
+    void JPXPrint(NSString *name);        // Mediocre
+    void JPXPrintName(NSString *name);    // Good
 
-Whitespace
-----------
+## Whitespace
 
-Whitespace is free. We all have large, high resolution displays. It's good to let the code breathe so it's more readable. Try to keep logical bits and pieces together, and use vertical whitespace to achieve rhythm and pacing.
+Whitespace is free. We all have large, high resolution displays. It is good to let the code breath so it is more readable. However, when working in teams we often have to resolve merge conflicts. It is really helpful to keep the lines short to be able to read the code. Also, scrolling vertically is many times more comfortable than scrolling horizontally. 
 
-###General
+It is recommended to hard-wrap the code after 120 characters. This gives the developer enough width to properly structure the code while gaining the ability to properly read the code without scrolling horizontally.
+
+### General
 
 Use tabs instead of spaces (the default setting, which uses a tab size of 4). Xcode will try to assist you in keeping things properly indented. Follow its suggestions (pro tip: if Xcode is being funky about how it indents things, you've probably got a syntax error somewhere).
 
