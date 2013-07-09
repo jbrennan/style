@@ -226,122 +226,93 @@ Always try to use control structures without braces, as this leads to easier to 
     if (condition) 
         [self handleCondition];
 
-Project Conventions
------------------
+## Project Conventions
 
-###Keep public API simple
+### Keep the Public API Simple
 
-The Public API is what's exposed in your header files. These headers should only include the very minimal set of methods which can be used by outside classes. Any internal methods which won't either be invoked by outside classes, or overridden by sublcasses, should not be put in the `.h` file. This includes `@property` declarations. Public properties belong in the headers, but private ones should be declared in the **class extension**.
+The public API is what is exposed in the header files. Headers should only include the most minimal set of methods that can be used by outside classes. Internal methods should not be put in the header. This includes `@property` declarations. Public properties belong in the headers. Private properties should be declared in the **class extension** inside the implementation file.
 
-This also means header files should not contain instance variable declarations, as they are really an implementation detail. There are two other ways to declare instance variables (without dropping down to the runtime level).
+This also means header files should not contain instance variable declarations, because they are an implementation detail. There are two other ways to declare instance variables (without dropping down to the runtime level).
 
-1. Variables can be synthesized with the `@synthesize` and a matching property name (and synthesized variables can even be given a custom name like so `@synthesize myPropertyName = _myPropertyName`. The propery is still `myPropertyName`, but the actual instance variable created has a leading underscore).
+1. Instance variables can be synthesized with the `@synthesize` keyword and a matching property name (and synthesized variables can even be given a custom name like so `@synthesize myPropertyName = _myPropertyName`. The propery is still `myPropertyName`, but the actual instance variable created has a leading underscore). Xcode automatically synthesizes the methods of a property and creates instance variables with a leading underscore. Therefore, explicity `@synthesize` statements should only be written when needed (e.g., when defining a lazily-initialized `readonly` property).
 
-2. Declaring instance variables in the `@implementation`. This is just like declaring them in the `@interface`, except they're no longer visible to consuming classes or subclasses.
+2. Declaring instance variables in the `@implementation`. This is just like declaring them in the `@interface`, except they are no longer visible to client classes or subclasses.
 
-		@implementation MyClass {
-			NSString *_internalVariable;
-		}
+    @implementation JPXMyClass {
+        NSString *_myInstanceVariable;
+    }
 
-Of the two methods, using properties (even if just declared in the Class Extension) is better better because it generates getters and setters, which give us a common place to add extra code. If bare ivars are used and a change must be made, then we've got extra work to be done.
+Of the two methods, using properties (even if just declared in the class extension) is better because it generates getters and setters, which gives us a common place to add extra code. If you access ivars directly and change must be made, then you potentially have to adjust many different call sites.
 
-###Keep implementations ordered
+### Keep Implementations Ordered
 
-This is an easy one. Try to keep methods in the implementation files grouped together logically, instead of strewn about the file. If there are a bunch of delegate methods implemented, put those together, and use a `#pragma mark - SomeDelegateProtocol methods` to mark the beginning of a section of methods.
+This is an easy one. Try to keep methods in the implementation files grouped together logically instead of strewn about the file. If there are a bunch of delegate methods implemented, put those together, and use `#pragma mark - SomeDelegateProtocol` to mark the beginning of a section of methods.
 
 For subclasses, try to keep your overrides grouped as well, in order of the hierarchy. For example, keep `NSObject` override methods first, then say, `UIViewController` overrides, then the subclass's methods.
 
-###Class extensions
+### Class Extensions
 
-Class extensions are how internal methods and properties should be hidden out of the public interface and header file. They are kind of like anonymous categories. They are to be placed in the `.m` file before the main `@implementation` block. For a class named `ShopTableViewController`, the class extension might look like this:
+Class extensions are how private properties should be hidden out of the public interface. They are kind of like anonymous categories. They should be placed in the `.m` file before the main `@implementation` block. For a class named `JPXShopTableViewController`, the class extension might look like this:
 
-	@interface ShopTableViewController ()
+    @interface JPXShopTableViewController ()
+    
+    @property (nonatomic, strong) NSString *name;
 
-	@property (nonatomic, strong) NSString *internalString;
+    @end
 
-	- (void)doSomethingInternal;
+The properties declared in the class extension are synthesized like any other property in the public interface. There is no need to create a second, named category.
 
-	@end
+### Comments
 
-The methods and properties declared in this extension become synthesized and implemented just like any other method or property in a public interface. There is no need to create a second, named implementation block.
+Comments in the public interface are a good thing to describe what they do, and what both the parameters and return values need to be (e.g. "This parameter must not be nil!").
 
-###Comments
+For general code comments, they are often not necessary. Rather than lots of comments, the methods should be named descriptively and only do one thing. If a method needs to do several things, create more methods that are called from the first method. Comments in implementations can quickly become out of date, and are often reduntant.
 
-Comments are good in the public interface to describe what the public APIs do and what the methods' parameters and return values need to be (e.g. "This parameter must not be nil!").
+Comments should always explain *why* a chunk of code exists rather than explain *what* it does. Programmers can follow along a block of code fairly easily without comments, but the real benefit is explaining something like "Shift bits to set flag to turn on networking".
 
-For general code comments, they are often not as necessary. Rather than lots of comments, the methods should be descriptively named, as mentioned above. Comments in implementations can quickly become out of date, and are often reduntant.
+#### Blocks
 
-Comments which explain *why* a chunk of code exists are much better than comments which explain *what* a chunk of code does. Most programmers can follow along a block of code fairly easily without comments, but the real benefit is explaining something like "We're shifting the bits here to set a flag, which is needed so networking turns on", or something to that effect.
+Use caution with Blocks, as they automatically retain objects referenced inside them. Usually this is not too much of a problem as they are also released when the Block is deallocated, but it can easily lead to retain cycles. Consider using a `__weak` local variable and in the Block to avoid a retain cycle in such cases.
 
-
-
-
-###Being a good Cocoa citizen
-
-Being a good Cocoa citizen means following the conventions of the environment. We can get lots accomplished with the provided libraries. External frameworks like Three20 should be considered kind of harmful because they impose conventions from a different programming environment.
-
-####Blocks
-
-When implementing a callback mechanism, use Block objects instead of delegation wherever possible. These cut down on the verbiage of having to declare a delegate protocol, then marking your class as conforming to the protocol, then implementing the delegate methods.
-
-With Block objects, they are typically `#typedef`'d in a class header, and then implemented inline as they are needed. Much simpler.
-
-Use caution with Block objects, as they automatically retain objects referenced inside them. Usually this isn't too much of a problem as they are also released when the Block is destroyed, but it can lead to retain cycles. Consider using `__weak SomeClass weakObject = someStrongObject` and referencing the weak version instead in the Block object to avoid such a cycle (if `someStrongObject` retains the Block object).
-
-####Delegates
-
-Delegates are useful when fine granularity is needed in callbacks, or when multiple objects might be using the same callbacks, although they should generally be avoided in favour of Block object handlers.
-
-####Use Cocoa "primitives"
+#### Use Cocoa "Primitives"
 
 Try to use the declared Cocoa "primitives" instead of their plain C counterparts. This means using `NSInteger` and `NSUInteger` instead of `int` and `unsigned int`, or using `CGFloat` instead of `float`.
 
-We do this because it gives better flexibility if Apple ever changes what they decide an `NSInteger` should refer to. The Cocoa types are really just typedefs which evaluate to different primative types depending on the archictecture they are compiled for. If Apple ever move iOS to a 64 bit platform, all uses of `NSInteger` will automatically be updated on the next compile to use the proper types. We won't have to modify our code nearly as much for any possible future processor architecture changes.
+We do this because it gives better flexibility if Apple ever changes what they decide an `NSInteger` should refer to. The Cocoa types are really just `typedef`'ed types that evaluate to different primitive types depending on the archictecture they are compiled for. If Apple ever switches to a 64 bit architecture for iOS, all uses of `NSInteger` will automatically be updated during the next compilation to use the proper types. We will not have to modify our code nearly as much for any possible future processor architecture changes.
 
 It also means we should use types like `NSTimeInterval`, which really evaluates to a `double`, but using the Apple provided types are better because they give more context as to what the variable represents.
 
+#### Exceptions
 
-####Exceptions
+Do not use exceptions to manipulate the program flow. Throwing exceptions in Cocoa is reserved for programmer error. If there is a possibility of something going wrong at runtime, your API should require an `NSError **` (a pointer to a pointer to an NSError instance) and the method should return `NO` or `nil` if an error occurs. If that happens, the method should update the provided `NSError *` to point to a new instance of `NSError` that represents the error.
 
-Throwing exceptions in Cocoa is reserved for programmer error. If there is a possibility of something going wrong at runtime, your API should require an `NSError` pointer pointer and the method should return `NO` or `nil` on error condition, filling the error pointer too. Exceptions should not be used.
+If your code crashes with an uncaught exception, there is a bug in your code and you need to fix it. A typical example is an `NSInternalInconsistencyException`. This is a mistake by the programmer, not a runtime error condition.
 
-If your code crashes on an `Uncaught Exception`, this means there is something incorrect in your code (i.e. programmer error) and you need to fix this. A typical example would be an ArrayOutOfBoundsException. This is a mistake by the programmer, not a runtime error condition.
+### ARC
 
-###ARC
+All projects should use Automatic Reference Counting. Existing projects should be upgraded as soon as possible.
 
-All new projects should use Automatic Reference Counting. Existing projects should be upgraded as soon as possible.
+For projects supporting iOS 5.0 or later, you should use `weak` instead of `assign` and `strong` instead of `retain` in properties for object pointers. Keep using `assign` for primitive types, as this is exactly what should happen when setting a new value of a primitive type. Although `retain` and `strong` are synonyms in ARC, `strong` should be used instead as it gives a better and more consistent indication of what the property is doing in terms of the object graph. It is also more consistent with the storage types (like `__weak`, `__strong`, etc.).
 
-For projects supporting iOS 5+, we should be using `weak` and `strong` properties. Though `retain` and `strong` are synonyms in ARC, `strong` should be used instead as it gives a better and more consistent indication of what the property is doing in terms of the object graph. It's also more consistent with the storage types (like `__weak`, `__strong`, etc.).
+### Warnings and Errors
 
+Warnings should be treated as errors (at least in release builds), both by you and by the compiler. A warning is a bug that maybe has not happened yet. Fix all the warnings as soon as they happen so they do not get out of control.
 
-###Warnings and Errors
+Turn on the Static Analyzer for all configurations and all targets. Our machines are powerful enough to use the Static Analyzer in every build. Fix a Static Analyzer warnings as soon as it occurs.
 
-Warnings should be treated as errors, both by you and by the compiler. A warning is just a bug that maybe hasn't happened yet.
+Always aim for 0 erros, 0 compiler warnings, 0 Static Analyzer warnings.
 
-All Xcode projects should have the `-Werror` compiler flag turned on and left on. If we turn this flag on from the beginning, then fixing warnings should not be a problem. If we turn it on later in the project, we'll have more work to do.
+### XIBs and Storyboards 
 
-Fix all the warnings as soon as they happen so they don't get out of control. 
+Interface Builder documents can be really useful and allow us to quickly prototype our interfaces, but they can usually only get us 90% of the way, with the other 10% being impossible without using code. XIBs and Storyboard documents are  difficult to merge. Due to these issues, use XIBs and Storyboards wisely and anticipate their shortcomings.
 
+### Base SDK and Deployment Target
 
-###Xibs and Interface Builder
+The project's `Base SDK` should always be set to `Latest iOS`, so it always links with the latest SDK. The Deployment Target specifies the oldest supported iOS version.
 
-Interface Builder documents can be really useful and allow us to quickly prototype our interfaces, but they can usually only get us 90% of the way, with the other 10% being impossible without using code.
+## The Boyscout Rule
 
-Xibs and Storyboard files are very difficult to merge if two or more developers have worked on them on different branches, causing massive headaches.
-
-Due to these issues, using Interface Builder documents should be avoided for everything except quick prototyping (which will be later thrown out).
-
-###Base SDK and Deployment Target
-
-The project's `Base SDK` should always be set to `Latest iOS Version`, so we'll always be linking against the newest SDK code and symbols.
-
-Our Deployment Target depends on the oldest possible OS version we'd like to support, e.g. only supporting back to iOS 5.0.
-
-
-Being a good boyscout
----------------------
-
-Finally, do your best to always be improving the code. Leave it in a better state than how you found it. If you notice a class is messy, then clean it up and make it adhere to this style guide.
+Do your best to always improve the code. Leave it in a better state than how you found it. If you notice a class is messy, clean it up and make it adhere to this style guide. Never be afraid to change code for the better.
 
 References
 ---------
