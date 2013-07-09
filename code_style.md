@@ -147,41 +147,47 @@ If the number the enumeration value resolves to ever changes, you get the new va
 
 Methods should be given descriptive names, where clarity is the most important feature. Names should be camel-cased with the initial letter lowercased.
 
-Make method names as long as necessary, naming with hints towards the condition, cause, and return value of the method. Methods should read like sentences, and the developer should grasp exactly the purpose of the method and invocation simply by reading its name.
+Make method names as long as necessary, naming with hints towards the condition, cause, and return value of the method. Methods should read like sentences, and the developer should exactly grasp the purpose of the method and invocation simply by reading its name.
 
-Selector pieces (i.e. the bits between the pieces, which are all really part of the selector) should be named without the use of `and`, `with`, etc. These conjunctions are not necessary and become excessive after only a few instances. Exceptions can be made for methods taking only one parameter.
+The single parts of the selector (i.e., the words between the colons) should be named without the use of `and`, `with`, etc. These conjunctions are not necessary and become excessive after only a few instances. Exceptions can be made for the first part of the selector.
 
-	- (id)initWithFrame:(CGRect)frame; // OK
-	- (id)initWithFrame:(CGRect)frame backgroundColor:(UIColor *)color; // OK
-	- (id)initWithFrame:(CGRect)frame andBackgroundColor:(UIColor *)color; // bad
+    - (id)initWithFrame:(CGRect)frame;                                         // Good
+    - (id)initWithFrame:(CGRect)frame backgroundColor:(UIColor *)color;        // Good
+    - (id)initWithFrame:(CGRect)frame andBackgroundColor:(UIColor *)color;     // Bad
 
-When creating new methods which provide more options to existing methods, list all the original parameters in your new method *first*, before adding additional parameters (as in the `-initWithFrame:backgroundColor:` example above). The only exception to this being when the final parameter of the existing method accepts a Block object, in which case your additional method must keep the Block object paramter as the final parameter.
+When creating new methods which provide more options to existing methods, list all the original parameters in your new method *first*, before adding additional parameters (as in `-initWithFrame:backgroundColor:` above). The only exception to this rule is when the final parameter of the existing method accepts a Block. In this case, the new method must keep the Block paramter as the final parameter.
 
-	- (void)haveAPartyWithFriends:(NSArray *)friends cleanupHandler:(JPCleanupBlock)handler;
-	- (void)haveAPartyWithFriends:(NSArray *)friends byob:(BOOL)byob cleanupHandler:(JPCleanupBlock)handler;
+    - (void)haveAPartyWithFriends:(NSArray *)friends cleanUpHandler:(JPXCleanUpHandler)cleanUpHandler;
+    - (void)haveAPartyWithFriends:(NSArray *)friends 
+                cateringAvailable:(BOOL)cateringAvailable 
+                   cleanUpHandler:(JPXCleanUpHandler)cleanUpHandler;
 
-Selector signatures (in both interface and implementations) must follow the standard Cocoa whitespace pattern as demonstrated throughout this guide.
+Selector signatures (both interface and implementation) must follow the standard usage of whitespace as demonstrated throughout this guide.
 
 1. The method scope (`-` and `+` for instance or class method, respectively), followed by a space.
-2. The return type of the method, with a space between the type and the star (this is really just like a cast, and all casts must follow this guideline). If there is no star, then there is no space. Double-star casts (e.g. `(NSError **)` should not have a second space.
-3. The start of the selector should directly follow the cast *with no space*.
+2. The return type of the method, with a space between the type and the star (this is really just like a cast, and all casts must follow this guideline). If there is no star, then there is no space. Double-star casts (e.g. `(NSError **)`) should not have a second space.
+3. The start of the selector should directly follow the cast *without whitespace*.
 4. If the method takes parameters, they should follow a colon, their cast (with no space between the colon and the cast, and no space between the cast and the argument name).
-5. After all parameters, there should be a semi-colon in the declaration.
-6. After all parameters, there should be a space and then an opening brace on the same line in the implementation.
+5. After the last parameter in the declaration, there should be a semicolon in the declaration.
+6. After the last parameter in the implementation, there should be a space and then an opening brace **on the same line**.
 
+    // Declaration in header
+    - (NSString *)stringByMashingFirstName:(NSString *)firstName lastName:(NSString *)lastName;
+    
+    // Implementation in implementation file
+    - (NSString *)stringByMashingFirstName:(NSString *)firstName lastName:(NSString *)lastName {
+        // Do something ...
+    }
 
-		- (NSString *)stringByMashingFirstName:(NSString *)firstName lastName:(NSString *)lastName;
+Each method declaration should appear on its own line, below declared `@property` entries. Group related methods together and add a single line of whitespace between groups.
 
-Each method declaration should appear on its own line in an interface, below declared `@property` entries. Group related methods together, and add a line of whitespace between groups.
-
-Finally, don't be abusive with the compiler:
+Finally, do not be abusive with the compiler:
 
 * A return type must be provided, even though this is not required by the compiler.
 * All parameters must be named, even though this is not required by the compiler.
 * All parameters must be typed, even though this is not required by the compiler.
 
-		- validButStupidlyNamedSelector:::; // This kills the developer.
-		- (NSString *)stringByConstructingURLFromHost:(NSString *)host path:(NSString *)path;
+    - validButStupidlyNamedSelector:::;    // Bad
 
 ####Functions
 
