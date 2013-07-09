@@ -109,7 +109,7 @@ Do not declare them in the public `@interface` of a class, as instance variables
 
 Private constants should be declared with the `static` and `const` keywords and should start with the project prefix. They should **only** be declared in implementation files. `static` ensures that the symbol is only visible inside the implemention file. `const` ensures that no code in the implementation file changes the value of the symbol.
 
-    static NSString *const JPXAnimationDuration;
+    static NSString *const JPXAnimationDurationKey = @"JPXAnimationDurationKey";
     
 Public constants should be declared in the header and should be initialized in the implementation file. The actual value of a public constant is an implementation detail. Because of this split, the declaration must use `extern` to indicate that the symbol in the header is initialized somewhere else. The name of a public constant begins with the name of the class in which the constant is declared (in the example below `JPXProduct`), followed by a descriptive name.
 
