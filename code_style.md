@@ -1,19 +1,16 @@
-The Elements of Programmatic Style
-==================================
+# The Elements of Programmatic Style
 
+## Introduction
 
-Introduction
-------------
-
-The purpose of this guide is to ensure existing and future iOS and Mac products conform to a consistent and well-designed convention. This will make applications easier to build and debug for both newcomers and existing members alike. In this document, we'll be using Shopify (aka Jaded Pixel) as an organization name, but the same rules can apply to any organization, even if for solo developers.
+The purpose of this guide is to ensure existing and future iOS and Mac products conform to a consistent and well-designed convention. This will make applications easier to build and debug for both newcomers and existing members alike. In this document, we will be using Shopify (aka Jaded Pixel) as an organization name, but the same rules can apply to any organization, even to single developers.
 
 Many of the conventions in this guide are common to existing Cocoa style guides (see the References section below), and try to combine the best of those worlds.
 
-This document aims for excruciating clarity, attempting to document all possible aspects of iOS project development. If an aspect of coding style is not addressed here, please inform the authors and have the document updated accordingling.
+This document aims for excruciating clarity, attempting to document all possible aspects of iOS application development. If an aspect of coding style is not addressed here, please inform the authors and have the document updated accordingly.
 
-This document also strives to include the best and most modern features of the Objective-C language, Cocoa frameworks, and the iOS SDK in general, so that excessive baggage does not creep in. As the environment evolves, so too must this guide.
+This document also strives to include the best and most modern features of the Objective-C programming language, Cocoa frameworks, and the iOS SDK in general, so that excessive baggage does not creep in. As the environment evolves, so too must this guide.
 
-###Terminology
+### Terminology
 
 First, some quick terminology.
 
@@ -24,17 +21,17 @@ First, some quick terminology.
 * `*` is an *asterisk* or *star* (or *pointer thingy* `:)`).
 * `_` is an *underscore*.
 
-###About performance
+### About Performance
 
-Some of these guidelines may seem counter-perfomance (that is, these conventions may appear to hurt performance), but in fact, they are in place to *help* performance: Developer performance. Most runtime performance hits as a result to this guide will be negligible, but the gains to the developers will be substantial.
+Some of these guidelines may seem counter-perfomance (i.e., these conventions may appear to hurt performance), but in fact, they are in place to *help* performance: developer performance. Most runtime performance hits as a result to this guide will be negligible, but the gains to the developers will be substantial.
 
 If any of the guidelines causes a substantial performance hit, it can be dealt with on a case basis, and only after it has been thoroughly profiled.
 
-Naming
-------
-###In general
+## Naming
 
-When giving a name to any kind of symbol, you should strive to make it descriptive over terse. We have text editors capable of auto-completing symbol names, and we expect to make great usage of this. This extends even to iterator variables: these should be named accordingly (even if it's just `index`, but especially in the case of nested loops, `i`, `j`, and `k` will have your head spinning in no time).
+### In General
+
+When giving a name to any kind of symbol, you should strive to make it descriptive over terse. We have text editors capable of auto-completing symbol names, and we expect to make great usage of this. This extends even to iterator variables: those should be named accordingly (even if it is just `index`, but especially in the case of nested loops, `i`, `j`, and `k` will have your head spinning in no time).
 
 	NSInteger currentColumn;
 
@@ -43,24 +40,24 @@ The Cocoa naming conventions call for camel-casing all symbol names (with prepro
 	#define X_OFFSET 25.0f
 	NSInteger index = [SomeClassName classMethod];
 
-Don't abbreviate symbols and don't use acronyms unless they are extremely common (in which case use uppercase for each letter of the acronym) like `URL` or `PNG`. See the [Apple reference document] [apple2] for a list of acceptable acronyms.
+Do not abbreviate symbols and do not use acronyms unless they are extremely common (in which case you use uppercase for each letter of the acronym) like `URL` or `PNG`. See the [Coding Guidelines for Cocoa - Acceptable Abbreviations and Acronyms] [apple2] for a list of acceptable abbreviations and acronyms.
 
-###Files
+### Files
 
-Files should be given descriptive, camel cased names, with the initial letter being uppercased. When creating classes in Xcode, this is the default behavior, as the file names match the class names they contain.
+Files should be given descriptive, camel-cased names, with the initial letter being uppercased. When creating classes in Xcode, this is the default behavior, as the file names match the class names they contain.
 
-Files should be prefixed with the project prefix which should be the initials of the organization (in our case, this is `JP` for Jaded Pixel).
+Files should be prefixed with the project prefix which should be the initials of the organization (in our case, this is `JPX` for Jaded Pixel). The prefix should contain at least three letters, because two-letter prefixes are reserved for Apple framework classes (see [Programming with Objective-C - Class Names Must Be Unique Across an Entire App] [apple3] for more information). 
 
-	JPClassName.h
-	JPClassName.m
+	JPXClassName.h
+	JPXClassName.m
 
 **Note**: A file name should **never** be named with the same prefix as an Apple provided class, with the exception of *Categories*, whose file naming conventions are described below.
 
-###Classes
+### Classes
 
 Class names must be indicative of their class heirarchy. That is, from the class name, you should be able to correctly guess exactly what "kind of" class it is. Don't rely on the Xcode folder/group structure to indicate this, as the text editor itself ignores in which folder the class appears.
 
-	JPProductsTableViewController
+	JPXProductsTableViewController
 
 The above name is descriptive, and immediately indicates to the developer this class is a TableViewController which displays products.
 
@@ -356,3 +353,4 @@ References
    [commandments]: http://ironwolf.dangerousgames.com/blog/archives/913
    [apple]: http://developer.apple.com/library/ios/#documentation/Cocoa/Conceptual/CodingGuidelines/CodingGuidelines.html
    [apple2]: http://developer.apple.com/library/ios/#documentation/Cocoa/Conceptual/CodingGuidelines/Articles/APIAbbreviations.html#//apple_ref/doc/uid/20001285-BCIHCGAE
+[apple3]: http://developer.apple.com/library/ios/#documentation/cocoa/conceptual/ProgrammingWithObjectiveC/Conventions/Conventions.html
