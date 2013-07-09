@@ -33,23 +33,23 @@ If any of the guidelines causes a substantial performance hit, it can be dealt w
 
 When giving a name to any kind of symbol, you should strive to make it descriptive over terse. We have text editors capable of auto-completing symbol names, and we expect to make great usage of this. This extends even to iterator variables: those should be named accordingly (even if it is just `index`, but especially in the case of nested loops, `i`, `j`, and `k` will have your head spinning in no time).
 
-	NSInteger currentColumn;
+    NSInteger currentColumn;
 
 The Cocoa naming conventions call for camel-casing all symbol names (with preprocessor bits being the only exclusion):
 
-	#define X_OFFSET 25.0f
-	NSInteger index = [SomeClassName classMethod];
+    #define X_OFFSET 25.0f
+    NSInteger index = [SomeClassName classMethod];
 
-Do not abbreviate symbols and do not use acronyms unless they are extremely common (in which case you use uppercase for each letter of the acronym) like `URL` or `PNG`. See the [Coding Guidelines for Cocoa - Acceptable Abbreviations and Acronyms] [apple2] for a list of acceptable abbreviations and acronyms.
+Do not abbreviate symbols and do not use acronyms unless they are extremely common (in which case you use uppercase for each letter of the acronym) like `URL` or `PNG`. See the [Coding Guidelines for Cocoa - Acceptable Abbreviations and Acronyms][apple2] for a list of acceptable abbreviations and acronyms.
 
 ### Files
 
 Files should be given descriptive, camel-cased names, with the initial letter being uppercased. When creating classes in Xcode, this is the default behavior, as the file names match the class names they contain.
 
-Files should be prefixed with the project prefix which should be the initials of the organization (in our case, this is `JPX` for Jaded Pixel). The prefix should contain at least three letters, because two-letter prefixes are reserved for Apple framework classes. See [Programming with Objective-C - Class Names Must Be Unique Across an Entire App] [apple3] for more information. 
+Files should be prefixed with the project prefix which should be the initials of the organization (in our case, this is `JPX` for Jaded Pixel). The prefix should contain at least three letters, because two-letter prefixes are reserved for Apple framework classes. See [Programming with Objective-C - Class Names Must Be Unique Across an Entire App][apple3] for more information. 
 
-	JPXClassName.h
-	JPXClassName.m
+    JPXClassName.h
+    JPXClassName.m
 
 **Note**: A file name should **never** be named with the same prefix as an Apple provided class, with the exception of *Categories*, whose file naming conventions are described below.
 
@@ -57,7 +57,7 @@ Files should be prefixed with the project prefix which should be the initials of
 
 Class names must be indicative of their class hierarchy. That is, from the class name, you should be able to correctly guess exactly what kind of class it is. Do not rely on the folder/group structure in Xcode to indicate this, as the text editor itself ignores in which folder the class appears.
 
-	JPXProductsTableViewController
+    JPXProductsTableViewController
 
 The name above is descriptive and immediately indicates to the developer that this class displays products and is a subclass of `UITableViewController`.
 
@@ -69,21 +69,24 @@ Controller classes should contain `Controller` at the end of their name, view cl
 
 Protocols should be named like the classes they pertain to, additionally appending the protocol role. If there is no distinct role, appending `Protocol` is sufficient. The goal is to be able to tell at a glance what the symbol represents.
 
-	JPXCollectionViewDelegate
-        JPXCollectionViewDataSource
-	JPXReaperProtocol
+    JPXCollectionViewDelegate
+    JPXCollectionViewDataSource
+    JPXReaperProtocol
 
 Methods in a protocol are implicitly `@required`. It is often desirable to have `@optional` methods as well (e.g., when there is a default value for data source method). `@required` methods should be grouped together at the top, `@optional` methods should be grouped together at the bottom.
 
 ### Categories
 
-Category file names should indicate the name of the class being extended, followed by a `+`, followed by the name of the category. I believe this is the default Xcode behaviour as of Xcode 4.2.
+Category file names should indicate the name of the class being extended, followed by a `+`, followed by the name of the category. This is the default behaviour as of Xcode 4.6.3.
 
-When naming the category, avoid using generic names like "Additions", instead being more descriptive of what is being added. If the category methods are a grab bag, then `Utilities` is preferred. The category name must also be prefixed with the project's suffix.
+When naming the category, avoid using generic names like "Additions", instead be more descriptive of what the category adds to the class. If the category methods are a grab bag, then use `Utilities`. The category name must also be prefixed correctly.
 
-	NSString+JP1337Additions.h/m
+    NSString+JPXUtilities.h
+    NSString+JPXUtilities.m
 
-Categories are used to extend existing classes at runtime without subclassing, and we can make liberal use of these. But categories **must not** be used to override existing methods.
+Categories are used to extend existing classes at runtime without subclassing, and we can make liberal use of these. But categories **must not** be used to override existing methods. Therefore, **all** methods of the category must be appropriately prefixed. Use the project prefix followed by `_` as the method prefix.
+
+    - (void)JPX_doSomething;
 
 ###Variables
 
@@ -93,8 +96,8 @@ When declaring objects or any other pointer type, the star belongs with the vari
 
 Keep variable declarations on their own line even if they are of the same type.
 
-	NSString *localString;
-	NSString *password;
+    NSString *localString;
+    NSString *password;
 
 ####Instance variables
 
