@@ -207,14 +207,11 @@ It is recommended to hard-wrap the code after 120 characters. This gives the dev
 
 ### General
 
-Use tabs instead of spaces (the default setting, which uses a tab size of 4). Xcode will try to assist you in keeping things properly indented. Follow its suggestions (pro tip: if Xcode is being funky about how it indents things, you've probably got a syntax error somewhere).
+Use spaces instead of tabs. Use a tab width of 4 spaces. Xcode will try to assist you in keeping things properly indented. Follow its suggestions (pro tip: if Xcode is being funky about how it indents things, you've probably got a syntax error somewhere). If you use tabs with a tab width of 4 spaces and your coworker uses tabs with a tab width of 8 spaces, things look messed up quickly. Using spaces instead of tabs prevents this. Also, 4 spaces in recognized to be the default in Cocoa.
 
-There is typically no reason to hard-wrap lines, even though Objective-C tends to be a verbose language, we also have wide diplays, so there is rarely a need to wrap the lines manually. Turning on word-wrap helps for smaller displays.
+If you need to wrap a method line, either the signature or an invocation, you may do so but make sure the parameter colons line up properly (Xcode will try its best to do this for you).
 
-If you feel the need to wrap a method line, either the signature or an invocation, you may do so but make sure the parameter colons line up properly (Xcode will try its best to do this for you), but generally this isn't necessary.
-
-
-###Control Structures
+### Control Structures
 
 Control structures like `if`, `for`, `while`, etc all require one space between the keyword and the open paren, and one space between the closing paren and the opening brace. There should be no padding spaces inside the parens before the actual condition.
 
