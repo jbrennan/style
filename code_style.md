@@ -88,34 +88,33 @@ Categories are used to extend existing classes at runtime without subclassing, a
 
     - (void)JPX_doSomething;
 
-###Variables
+### Variables
 
-Variables are to be named in camel-case, initially lowercase. This applies to instance, static, and local variables. Block variables are treated the same as local scope variables in terms of naming conventions.
+Variables are to be named in camel-case and begin with a lowercase letter. This applies to instance, static, and local variables. Block variables are treated the same as local scope variables in terms of naming conventions.
 
-When declaring objects or any other pointer type, the star belongs with the variable name.
+When declaring object or any other pointer type variables, the star `*` belongs to the variable name, not the class name or type.
 
-Keep variable declarations on their own line even if they are of the same type.
+Keep each variable declaration on its own line, even if subsequent declarations are of the same type.
 
-    NSString *localString;
+    NSString *username;
     NSString *password;
 
-####Instance variables
+#### Instance Variables
 
-Instance variables should be named like normal variables, except with a leading underscore.
+Instance variables should be named like normal variables, except with a leading underscore `_`.
 
-Instance variables are not to be declared in the public `@interface` of a class, as this leaks irrelevant implementation details. Instead, declare them as properties or declare them in the `@implementation` block. See the below section for more information on interfaces and implementation.
+Do not declare them in the public `@interface` of a class, as instance variables are an implementation detail. Instead, declare them in the `@implementation` block or declare private properties in the implementation and synthesize the instance variables. See the section below for more information on interfaces and implementation.
 
-###Other symbols
+#### Constants
 
-Other symbols follow similar rules as already established.
+Private constants should be declared with the `static` and `const` keywords and should start with the project prefix. They should **only** be declared in implementation files. `static` ensures that the symbol is only visible inside the implemention file. `const` ensures that no code in the implementation file changes the value of the symbol.
 
-####Constants
+    static NSString *const JPXAnimationDuration;
+    
+Public constants should be declared in the header and should be initialized in the implementation file. The actual value of a public constant is an implementation detail. Because of this split, the declaration must use `extern` to indicate that the symbol in the header is initialized somewhere else. The name of a public constant begins with the name of the class in which the constant is declared (in the example below `JPXProduct`), followed by a descriptive name.
 
-Should be declared with the `const` keyword and should be named with an initial lowercase `k`, followed by the most closely related type or class name, followed by the value.
-
-	const NSString *kJPProductsDataKey; // defined in an implementation file.
-
-Constants should go in their related class header file if appropriate, or if they are used by potentially many classes, should be placed in a project-wide `Constants.h` header file which should be imported in the `Project.pch` prefix file.
+    extern NSString *const JPXProductDataKey;                   // In file JPXProduct.h
+    NSString *const JPXProductDataKey = @"JPXProductDataKey";   // In file JPXProduct.m
 
 ####Enumerations
 
