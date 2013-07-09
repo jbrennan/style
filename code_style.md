@@ -116,33 +116,34 @@ Public constants should be declared in the header and should be initialized in t
     extern NSString *const JPXProductDataKey;                   // In file JPXProduct.h
     NSString *const JPXProductDataKey = @"JPXProductDataKey";   // In file JPXProduct.m
 
-####Enumerations
+Both private and public constants should be initialized with their symbol name. This effectively prevents conflicts with other constants.
 
-Enums should be used whenever a variety of integer values could be used (usually as some kind of descriminating grouping). Enumerations should be `typedef`'d and given a name in a similar style to their related class. The enum values should be named similarly, including the name of the type, with the actual type appended.
+#### Enumerations
 
-	typedef enum {
-		JPProductPlacementTypeTop,
-		JPProductPlacementTypeCenter,
-		JPProductPlacementTypeBottom
-	} JPProductPlacementType;
+Enumerations should be used whenever a variety of integer values could be used (usually as some kind of discriminate grouping). Enumerations should be typedef'd with the `NS_ENUM()` preprocessor macro and given a name in a similar style to their related class. The enum values should be named similarly, including the name of the type, with the actual type appended.
 
-Even though `enum` values are really just integers, they should always be treated as their own type (e.g. `JPProductPlacementType`, and never just `int`). This gives the symbol extra context instead of just some random, unrelated type. This also means you should never use a plain integer when a enum value is needed.
+    typedef NS_ENUM(NSInteger, JPXProductPlacementType) {
+        JPXProductPlacementTypeTop,
+        JPXProductPlacementTypeCenter,
+        JPXProductPlacementTypeBottom
+    };
 
-	cell.placementType = 1; // BAD!
-	cell.placementType = JPProductPlacementTypeCenter; // A++!
+Even though enumeration types are just integers, they should always be treated as their own type (e.g. `JPXProductPlacementType`, and never just `int`). This gives the symbol extra context instead of just some random, unrelated type. The use of `NS_ENUM()` allows the compiler to provide code-completion for enumerations and to emit more warnings if the enumeration is used inappropriately. For more information about `NS_ENUM()`, see [NSHipster - NS_ENUM & NS_OPTIONS][nshipster1]. 
 
-If the number the enum value resolves to ever changes, you get the new value for free!
+You should never use a plain integer when an enumeration value is expected.
 
+    cell.placementType = 1;                                // Bad
+    cell.placementType = JPXProductPlacementTypeCenter;    // Good
 
-####Define
+If the number the enumeration value resolves to ever changes, you get the new value for free!
 
-`#define` values should only be used for small, internal uses where one of the above symbol types seems like overkill. Define is the poor-man's constant.
+#### #define
 
-Defines should be all uppercase, with underscores used as a delimiter. 
+`#define` should only be used for small, internal uses where one of the above symbol types seems like overkill. `#define` is the poor-man's constant. Defines should be all uppercase, with underscores used as a delimiter. 
 
-	#define CELL_X_OFFSET 25.0f
+    #define CELL_X_OFFSET 25.0f
 
-###Methods
+### Methods
 
 Methods should be given descriptive names, where clarity is the most important feature. Names should be camel-cased with the initial letter lowercased.
 
@@ -350,12 +351,10 @@ References
 * [Apple] [apple]
 * [Code Commandments] [commandments]
 
-
-
-
-   [google]: http://google-styleguide.googlecode.com/svn/trunk/objcguide.xml
-   [zarra]: http://www.cimgf.com/zds-code-style-guide/
-   [commandments]: http://ironwolf.dangerousgames.com/blog/archives/913
-   [apple]: http://developer.apple.com/library/ios/#documentation/Cocoa/Conceptual/CodingGuidelines/CodingGuidelines.html
-   [apple2]: http://developer.apple.com/library/ios/#documentation/Cocoa/Conceptual/CodingGuidelines/Articles/APIAbbreviations.html#//apple_ref/doc/uid/20001285-BCIHCGAE
+[google]: http://google-styleguide.googlecode.com/svn/trunk/objcguide.xml
+[zarra]: http://www.cimgf.com/zds-code-style-guide/
+[commandments]: http://ironwolf.dangerousgames.com/blog/archives/913
+[apple]: http://developer.apple.com/library/ios/#documentation/Cocoa/Conceptual/CodingGuidelines/CodingGuidelines.html
+[apple2]: http://developer.apple.com/library/ios/#documentation/Cocoa/Conceptual/CodingGuidelines/Articles/APIAbbreviations.html#//apple_ref/doc/uid/20001285-BCIHCGAE
 [apple3]: http://developer.apple.com/library/ios/#documentation/cocoa/conceptual/ProgrammingWithObjectiveC/Conventions/Conventions.html
+[nshipster1]: http://nshipster.com/ns_enum-ns_options/
